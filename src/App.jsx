@@ -52,12 +52,6 @@ export default function App() {
       setPhase(PHASE.REGULATING)
       setPulseActive(true)
     })
-    timerRef.current = setTimeout(() => {
-      fadeTransition(() => {
-        setPhase(PHASE.CHOICE)
-        setPulseActive(false)
-      })
-    }, 32000)
   }
 
   const handleChoice = (action) => {
@@ -68,12 +62,6 @@ export default function App() {
         setPhase(PHASE.REGULATING)
         setPulseActive(true)
       })
-      timerRef.current = setTimeout(() => {
-        fadeTransition(() => {
-          setPhase(PHASE.CHOICE)
-          setPulseActive(false)
-        })
-      }, 32000)
     } else {
       const dp = getDeepPhrase(action)
       fadeTransition(() => {
@@ -113,7 +101,11 @@ export default function App() {
           <div className="center-layout">
             <div className={`breath-orb ${pulseActive ? 'pulse' : ''}`} />
             <p className="grounding-phrase">{phrase}</p>
-            <button className="ghost-btn" onClick={handleReset}>← start over</button>
+            <div className="choice-grid">
+              <button className="choice-btn" onClick={() => handleChoice('stay')}>Another one</button>
+              <button className="choice-btn" onClick={() => fadeTransition(() => { setPhase(PHASE.CHOICE); setPulseActive(false) })}>Something else</button>
+              <button className="choice-btn" onClick={handleReset}>I&apos;m good</button>
+            </div>
           </div>
         )}
 
