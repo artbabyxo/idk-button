@@ -1,87 +1,70 @@
 import { useState, useEffect, useRef } from 'react'
-import {
-  groundingPhrases,
-  choiceOptions,
-  perspectivePhrases,
-  releasePhrases,
-  decidePhrases,
-} from './phrases'
+import { sensoryPhrases, releasePhrases, landingTaglines } from './phrases'
 import './App.css'
 
-const PHASE = {
-  LANDING: 'landing',
-  REGULATING: 'regulating',
-  CHOICE: 'choice',
-  DEEP: 'deep',
-}
+const PHASE = { LANDING: 'landing', PHRASE: 'phrase' }
+const POOL = { SENSORY: 'sensory', RELEASE: 'release' }
 
-function randomFrom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
-}
-
-function getDeepPhrase(action) {
-  switch (action) {
-    case 'perspective': return randomFrom(perspectivePhrases)
-    case 'release': return randomFrom(releasePhrases)
-    case 'decide': return randomFrom(decidePhrases)
-    case 'stay': return randomFrom(groundingPhrases)
-    default: return ''
-  }
+function randomFrom(arr, exclude = null) {
+  const options = exclude ? arr.filter(p => p !== exclude) : arr
+  return options[Math.floor(Math.random() * options.length)]
 }
 
 export default function App() {
   const [phase, setPhase] = useState(PHASE.LANDING)
+  const [pool, setPool] = useState(POOL.RELEASE)
   const [phrase, setPhrase] = useState('')
-  const [deepPhrase, setDeepPhrase] = useState('')
+  const [tagline, setTagline] = useState(landingTaglines[0])
   const [visible, setVisible] = useState(true)
-  const [pulseActive, setPulseActive] = useState(false)
-  const timerRef = useRef(null)
+  const taglineTimer = useRef(null)
 
-  const fadeTransition = (fn) => {
+  // Rotate taglines on landing
+  useEffect(() => {
+    if (phase !== PHASE.LANDING) return
+    let i = 0
+    taglineTimer.current = setInterval(() => {
+      i = (i + 1) % landingTaglines.length
+      setTagline(landingTaglines[i])
+    }, 3000)
+    return () => clearInterval(taglineTimer.current)
+  }, [phase])
+
+  const fade = (fn) => {
     setVisible(false)
-    setTimeout(() => {
-      fn()
-      setVisible(true)
-    }, 400)
+    setTimeout(() => { fn(); setVisible(true) }, 380)
   }
 
-  const handleButtonTap = () => {
-    const p = randomFrom(groundingPhrases)
-    fadeTransition(() => {
+  const handleTap = () => {
+    const p = randomFrom(releasePhrases)
+    fade(() => {
+      setPool(POOL.RELEASE)
       setPhrase(p)
-      setPhase(PHASE.REGULATING)
-      setPulseActive(true)
+      setPhase(PHASE.PHRASE)
     })
   }
 
-  const handleChoice = (action) => {
-    if (action === 'stay') {
-      const p = randomFrom(groundingPhrases)
-      fadeTransition(() => {
-        setPhrase(p)
-        setPhase(PHASE.REGULATING)
-        setPulseActive(true)
-      })
-    } else {
-      const dp = getDeepPhrase(action)
-      fadeTransition(() => {
-        setDeepPhrase(dp)
-        setPhase(PHASE.DEEP)
-      })
-    }
+  const handleAnother = () => {
+    const currentPool = pool === POOL.RELEASE ? releasePhrases : sensoryPhrases
+    const p = randomFrom(currentPool, phrase)
+    fade(() => setPhrase(p))
   }
 
-  const handleReset = () => {
-    clearTimeout(timerRef.current)
-    fadeTransition(() => {
+  const handleSomethingElse = () => {
+    const nextPool = pool === POOL.RELEASE ? POOL.SENSORY : POOL.RELEASE
+    const nextPhrases = nextPool === POOL.RELEASE ? releasePhrases : sensoryPhrases
+    const p = randomFrom(nextPhrases)
+    fade(() => {
+      setPool(nextPool)
+      setPhrase(p)
+    })
+  }
+
+  const handleGood = () => {
+    fade(() => {
       setPhase(PHASE.LANDING)
       setPhrase('')
-      setDeepPhrase('')
-      setPulseActive(false)
     })
   }
-
-  useEffect(() => () => clearTimeout(timerRef.current), [])
 
   return (
     <div className="app">
@@ -89,53 +72,20 @@ export default function App() {
 
         {phase === PHASE.LANDING && (
           <div className="center-layout">
-            <p className="eyebrow">you don&apos;t have to know right now</p>
-            <button className="idk-button" onClick={handleButtonTap}>
-              <span className="button-label">IDK</span>
+            <p className="tagline">{tagline}</p>
+            <button className="idk-button" onClick={handleTap}>
+              <span className="button-label">I don't know</span>
             </button>
-            <p className="hint">tap when you&apos;re spiraling, stuck, or about to react</p>
           </div>
         )}
 
-        {phase === PHASE.REGULATING && (
+        {phase === PHASE.PHRASE && (
           <div className="center-layout">
-            <div className={`breath-orb ${pulseActive ? 'pulse' : ''}`} />
-            <p className="grounding-phrase">{phrase}</p>
-            <div className="choice-grid">
-              <button className="choice-btn" onClick={() => handleChoice('stay')}>Another one</button>
-              <button className="choice-btn" onClick={() => fadeTransition(() => { setPhase(PHASE.CHOICE); setPulseActive(false) })}>Something else</button>
-              <button className="choice-btn" onClick={handleReset}>I&apos;m good</button>
-            </div>
-          </div>
-        )}
-
-        {phase === PHASE.CHOICE && (
-          <div className="center-layout">
-            <p className="choice-prompt">how are you feeling?</p>
-            <div className="choice-grid">
-              {choiceOptions.map(opt => (
-                <button
-                  key={opt.action}
-                  className="choice-btn"
-                  onClick={() => handleChoice(opt.action)}>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-            <button className="ghost-btn" onClick={handleReset}>← start over</button>
-          </div>
-        )}
-
-        {phase === PHASE.DEEP && (
-          <div className="center-layout">
-            <p className="deep-phrase">{deepPhrase}</p>
-            <div className="deep-actions">
-              <button className="choice-btn" onClick={() => handleChoice('stay')}>
-                Stay a little longer
-              </button>
-              <button className="ghost-btn" onClick={handleReset}>
-                ← start over
-              </button>
+            <p className="phrase">{phrase}</p>
+            <div className="options">
+              <button className="option-btn" onClick={handleAnother}>Another</button>
+              <button className="option-btn" onClick={handleSomethingElse}>Something else</button>
+              <button className="option-btn muted" onClick={handleGood}>I&apos;m good</button>
             </div>
           </div>
         )}

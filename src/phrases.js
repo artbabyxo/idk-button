@@ -1,63 +1,49 @@
-// Immediate response phrases — shown on button tap
-// Rotating, grounding, no commands, no judgment
-export const groundingPhrases = [
-  "Nothing is required right now.",
-  "Let your body catch up.",
-  "You're safe to wait.",
-  "You don't need to decide right now.",
-  "Clarity comes after safety.",
-  "You're allowed to pause.",
-  "Not knowing is not failure.",
+// Pool A — body/sensory presence
+// Pulls the user into the physical moment, out of the loop
+export const sensoryPhrases = [
+  "Notice the sensation in your fingertips.",
+  "Feel the weight of your feet on the floor.",
+  "What does the air feel like on your skin right now?",
+  "Press your feet into the ground. Just for a second.",
+  "Notice five things you can physically feel right now.",
+  "Put your hand on your chest. Feel it rise and fall.",
+  "Your body is here even when your mind isn't.",
+  "Take one breath. Just one.",
+  "Feel the weight of your body wherever you're sitting or standing.",
+  "What's the temperature of the room right now?",
+  "Notice the sounds around you without naming them.",
+  "Soften your jaw. Soften your shoulders.",
+  "Your hands are here. Feel them.",
+  "You have a body. It's holding you right now.",
+  "Feel the texture of whatever your hands are touching.",
+]
+
+// Pool B — cognitive release
+// Loosens the mental grip, no commands
+export const releasePhrases = [
+  "Most of what you're worried about won't happen.",
+  "You don't have to have the answers right now.",
+  "Not knowing is not the same as failing.",
+  "Urgency is a feeling, not a fact.",
+  "You're allowed to not know.",
   "This moment doesn't need a resolution.",
   "You can stay here a little longer.",
-  "There's no right answer yet. That's okay.",
-  "Your nervous system is doing its job. Let it finish.",
-  "You don't have to perform certainty right now.",
-  "Breathe. The answer will come when it's ready.",
-  "Urgency is a feeling, not a fact.",
+  "Nothing is required of you right now.",
+  "The loop will break. It always does.",
+  "You don't have to decide anything in this moment.",
+  "Thinking harder won't get you there faster.",
+  "You've survived every hard moment so far.",
+  "Clarity comes after stillness, not before.",
   "You're not behind. You're just here.",
-  "Something in you already knows. Give it space.",
-  "The pause is doing something. Trust it.",
-  "You're allowed to not know.",
-  "Right now, nothing is required of you.",
-  "This is the work — staying when it's uncomfortable.",
+  "The answer exists. You don't have to force it.",
 ]
 
-// Choice gateway options — shown after ~30 seconds
-export const choiceOptions = [
-  { label: "Stay Here", action: "stay" },
-  { label: "Get Perspective", action: "perspective" },
-  { label: "Let It Go", action: "release" },
-  { label: "I'm Ready to Decide", action: "decide" },
-]
-
-// Perspective phrases — shown on "Get Perspective"
-export const perspectivePhrases = [
-  "Will this matter in a year?",
-  "What would you tell a friend in this moment?",
-  "What do you actually know for certain right now?",
-  "What's the worst realistic outcome — and could you survive it?",
-  "What state are you moving from? What would neutral feel like?",
-  "What part of this is yours to hold, and what isn't?",
-  "Is this urgency coming from outside or inside?",
-  "What does your body say when you stop thinking?",
-]
-
-// Release phrases — shown on "Let It Go"
-export const releasePhrases = [
-  "You don't have to carry this today.",
-  "Setting something down isn't giving up.",
-  "Some things resolve themselves when we stop pushing.",
-  "You're allowed to let this be someone else's job for now.",
-  "Release doesn't mean you don't care. It means you trust.",
-  "What if this didn't need to be solved by you, right now?",
-]
-
-// Decide phrases — shown on "I'm Ready to Decide"
-export const decidePhrases = [
-  "What does your gut say — before your mind jumps in?",
-  "Which option feels like expansion, and which feels like contraction?",
-  "If you weren't afraid, what would you choose?",
-  "What choice would the most regulated version of you make?",
-  "Trust what you know. You know more than you think.",
+// Landing taglines — blink/rotate on the home screen
+export const landingTaglines = [
+  "For moments when thinking isn't helping.",
+  "For when your brain won't let go.",
+  "For when you need to stop but don't know how.",
+  "For the loop you can't get out of.",
+  "For right before you do something you might regret.",
+  "For when you just don't know.",
 ]
