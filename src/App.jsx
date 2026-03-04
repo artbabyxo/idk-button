@@ -15,17 +15,22 @@ export default function App() {
   const [pool, setPool] = useState(POOL.RELEASE)
   const [phrase, setPhrase] = useState('')
   const [tagline, setTagline] = useState(landingTaglines[0])
+  const [taglineVisible, setTaglineVisible] = useState(true)
   const [visible, setVisible] = useState(true)
   const taglineTimer = useRef(null)
 
-  // Rotate taglines on landing
+  // Rotate taglines on landing with fade transition
   useEffect(() => {
     if (phase !== PHASE.LANDING) return
     let i = 0
     taglineTimer.current = setInterval(() => {
-      i = (i + 1) % landingTaglines.length
-      setTagline(landingTaglines[i])
-    }, 3000)
+      setTaglineVisible(false)
+      setTimeout(() => {
+        i = (i + 1) % landingTaglines.length
+        setTagline(landingTaglines[i])
+        setTaglineVisible(true)
+      }, 800)
+    }, 4000)
     return () => clearInterval(taglineTimer.current)
   }, [phase])
 
@@ -72,7 +77,7 @@ export default function App() {
 
         {phase === PHASE.LANDING && (
           <div className="center-layout">
-            <p className="tagline">{tagline}</p>
+            <p className={`tagline ${taglineVisible ? 'tagline-in' : 'tagline-out'}`}>{tagline}</p>
             <button className="idk-button" onClick={handleTap}>
               <span className="button-label">I don't know</span>
             </button>
